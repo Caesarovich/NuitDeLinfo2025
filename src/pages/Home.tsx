@@ -4,8 +4,8 @@ export function Home() {
 	const { setPage } = useVillage();
 
 	return (
-		<div className="flex flex-col">
-			<h1 className="text-3xl font-bold mb-4">
+		<div className="flex flex-col text-xl">
+			<h1 className="text-5xl font-bold mb-4 font-retro">
 				Bienvenue au bourg du village NIRD
 			</h1>
 			<p className="mb-8">
