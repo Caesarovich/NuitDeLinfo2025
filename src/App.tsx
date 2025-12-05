@@ -63,7 +63,11 @@ export function App() {
 	return (
 		<QueryClientProvider client={queryClient}>
 			<CharacterProvider>
-				<Navbar setLaserMode={setLaserMode} laserMode={laserMode} />
+				<Navbar
+					setLaserMode={setLaserMode}
+					laserMode={laserMode}
+					laserScore={laserScore}
+				/>
 				<div className="min-h-screen flex flex-col justify-center items-center">
 					<div className="max-w-7xl p-8 text-center relative z-10 bg-base-100 rounded-3xl">
 						<Index />
