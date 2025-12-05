@@ -27,6 +27,13 @@ export function Home() {
 						>
 							Aller à la forge
 						</button>
+						<button
+							type="button"
+							className="btn btn-primary"
+							onClick={() => setPage("card")}
+						>
+							Jeux de carte (pas fini)
+						</button>
 					</div>
 				</div>
 			</Activity>

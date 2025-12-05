@@ -69,22 +69,13 @@ export function App() {
 					laserScore={laserScore}
 				/>
 				<div className="min-h-screen flex flex-col justify-center items-center">
-					<div className="max-w-7xl p-8 text-center relative z-10 bg-base-100 rounded-3xl">
+					<div className=" p-8 text-center relative z-10 bg-base-100 rounded-3xl">
 						<Index />
 					</div>
 				</div>
 			</CharacterProvider>
 		</QueryClientProvider>
 	);
-	//return (
-	//	<VillageProvider>
-	//		<div className="max-w-7xl mx-auto p-8 text-center relative z-10 bg-base-200 rounded-3xl">
-	//			<div className="flex flex-col justify-center items-center gap-8">
-	//				<Index />
-	//			</div>
-	//		</div>
-	//	</VillageProvider>
-	//);
 }
 
 export default App;

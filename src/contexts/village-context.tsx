@@ -7,7 +7,7 @@ import {
 	useState,
 } from "react";
 
-type VillagePages = "home" | "snake" | "armory" | "chatbot";
+type VillagePages = "home" | "snake" | "armory" | "chatbot" | "card";
 
 export type VillageState = {
 	page: VillagePages;
