@@ -7,7 +7,7 @@ import {
 	useState,
 } from "react";
 
-type VillagePages = "home" | "snake";
+type VillagePages = "home" | "snake" | "armory";
 
 export type VillageState = {
 	page: VillagePages;
@@ -21,18 +21,23 @@ export type VillageActions = {
 
 export type VillageContextType = VillageState & VillageActions;
 
-export const villageDefaultContext: VillageContextType = {
-	page: "home",
-	setPage: () => {},
-	dialogsRead: new Set(),
-	addReadDialog: () => {},
+export type Challenges = "card" | "repair";
+
+export type CharacterState = {
+	name: string;
+	setName: (newName: string) => void;
+	completedChallenges: Set<Challenges>;
+	addCompletedChallenge: (chal: Challenges) => void;
+	challengeCount: number;
 };
 
-export const VillageContext = createContext<VillageContextType>(
-	villageDefaultContext,
+export type GameContextType = VillageState & VillageActions & CharacterState;
+
+export const GameContext = createContext<GameContextType | undefined>(
+	undefined,
 );
 
-export function VillageProvider({
+export function GameProvider({
 	children,
 	initialPage,
 }: {
@@ -42,27 +47,79 @@ export function VillageProvider({
 	const [page, setPage] = useState<VillagePages>(initialPage ?? "home");
 	const [dialogsRead, setDialogsRead] = useState<Set<string>>(new Set());
 
-	const addReadDialog = useCallback(
-		(d: string) => setDialogsRead(new Set([...dialogsRead.values(), d])),
-		[dialogsRead],
-	);
+	const [name, setName] = useState<string>("Dave");
+	const [completedChallenges, setCompletedChallenges] = useState<
+		Set<Challenges>
+	>(new Set());
+
+	const addReadDialog = useCallback((d: string) => {
+		setDialogsRead((old) => {
+			const next = new Set(old);
+			next.add(d);
+			return next;
+		});
+	}, []);
+
+	const addCompletedChallenge = useCallback((d: Challenges) => {
+		setCompletedChallenges((old) => {
+			const next = new Set(old);
+			next.add(d);
+			return next;
+		});
+	}, []);
 
 	const value = useMemo(
-		() => ({ page, setPage, dialogsRead, addReadDialog }),
-		[page, dialogsRead, addReadDialog],
+		() => ({
+			page,
+			dialogsRead,
+			setPage,
+			addReadDialog,
+			name,
+			setName,
+			completedChallenges,
+			addCompletedChallenge,
+			challengeCount: completedChallenges.size,
+		}),
+		[
+			page,
+			dialogsRead,
+			name,
+			completedChallenges,
+			addReadDialog,
+			addCompletedChallenge,
+		],
 	);
 
-	return (
-		<VillageContext.Provider value={value}>{children}</VillageContext.Provider>
-	);
+	return <GameContext.Provider value={value}>{children}</GameContext.Provider>;
 }
 
 export function useVillage() {
-	const ctx = useContext(VillageContext);
-	if (!ctx) {
-		throw new Error("useVillage must be used within a VillageProvider");
-	}
-	return ctx;
+	const ctx = useContext(GameContext);
+	if (!ctx) throw new Error("useVillage must be used within a GameProvider");
+	const { page, dialogsRead, setPage, addReadDialog } = ctx;
+	return { page, dialogsRead, setPage, addReadDialog };
 }
 
-export default VillageContext;
+export function useCharacter() {
+	const ctx = useContext(GameContext);
+	if (!ctx) throw new Error("useCharacter must be used within a GameProvider");
+	const {
+		name,
+		setName,
+		completedChallenges,
+		addCompletedChallenge,
+		challengeCount,
+	} = ctx;
+	return {
+		name,
+		setName,
+		completedChallenges,
+		addCompletedChallenge,
+		challengeCount,
+	};
+}
+
+export const VillageProvider = GameProvider;
+export const CharacterProvider = GameProvider;
+
+export default GameContext;

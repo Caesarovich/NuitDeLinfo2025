@@ -1,5 +1,6 @@
 import { Activity } from "react";
 import { useVillage } from "@/contexts/village-context";
+import { Armory } from "./Armory";
 import { Home } from "./Home";
 
 export function Index() {
@@ -7,13 +8,8 @@ export function Index() {
 
 	return (
 		<>
-			<Activity mode={page === "home" ? "visible" : "hidden"}>
-				<Home />
-			</Activity>
-
-			<Activity mode={page === "snake" ? "visible" : "hidden"}>
-				<h1>Bienvenue au SNAKE</h1>
-			</Activity>
+			{page === "home" && <Home />}
+			{page === "armory" && <Armory />}
 
 			<Activity mode={page === "home" ? "hidden" : "visible"}>
 				<button

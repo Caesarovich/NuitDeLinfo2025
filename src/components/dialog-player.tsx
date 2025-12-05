@@ -1,6 +1,7 @@
+import { createRef, useCallback, useEffect, useMemo, useState } from "react";
+import { useCharacter } from "@/contexts/character-context";
 import { useVillage } from "@/contexts/village-context";
 import type { DialogNode, DialogOption } from "@/lib/dialog";
-import { useCallback, useEffect, useMemo, useState } from "react";
 
 export type DialogPlayerProps = {
 	dialog: DialogNode;
@@ -8,6 +9,7 @@ export type DialogPlayerProps = {
 
 export function DialogPlayer({ dialog }: DialogPlayerProps) {
 	const villageContext = useVillage();
+	const characterContext = useCharacter();
 
 	const [playedDialogs, setPlayedDialogs] = useState<DialogNode[]>([dialog]);
 
@@ -16,14 +18,22 @@ export function DialogPlayer({ dialog }: DialogPlayerProps) {
 		[playedDialogs],
 	);
 
+	const messageListRef = createRef<HTMLUListElement>();
+
 	const playNextDialog = useCallback(() => {
 		const current = playedDialogs.at(-1);
 		if (current?.nextNode)
 			setPlayedDialogs(playedDialogs.concat(current.nextNode));
-	}, [playedDialogs]);
+		setTimeout(() => {
+			messageListRef.current?.scrollTo({
+				top: messageListRef.current?.scrollHeight ?? 0,
+				behavior: "smooth",
+			});
+		}, 0);
+	}, [playedDialogs, messageListRef.current]);
 
 	const chooseDialogOption = (option: DialogOption) => {
-		if (option.action) option.action(villageContext);
+		if (option.action) option.action(villageContext, characterContext);
 		if (option.nextNode) {
 			setPlayedDialogs((prev) =>
 				prev.concat({
@@ -32,6 +42,12 @@ export function DialogPlayer({ dialog }: DialogPlayerProps) {
 					nextNode: option.nextNode,
 				}),
 			);
+			setTimeout(() => {
+				messageListRef.current?.scrollTo({
+					top: messageListRef.current?.scrollHeight ?? 0,
+					behavior: "smooth",
+				});
+			}, 0);
 		}
 	};
 
@@ -44,8 +60,11 @@ export function DialogPlayer({ dialog }: DialogPlayerProps) {
 	}, [playNextDialog]);
 
 	return (
-		<div className="flex flex-col bg-base-200 p-6 rounded-lg gap-16">
-			<ul className="flex flex-col flex-1">
+		<div className="flex flex-col bg-base-200 p-6 rounded-lg gap-16 max-h-[800px]">
+			<ul
+				ref={messageListRef}
+				className="flex flex-col flex-1  overflow-clip overflow-y-auto"
+			>
 				{playedDialogs.map((dialog, idx) => (
 					// biome-ignore lint/suspicious/noArrayIndexKey:OK BRO
 					<li key={idx}>

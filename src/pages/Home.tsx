@@ -1,8 +1,8 @@
+import { Activity } from "react";
+import chiefImg from "@/assets/character-chef.png";
 import { DialogPlayer } from "@/components/dialog-player";
 import { useVillage } from "@/contexts/village-context";
 import { chefIntroDialogNode } from "@/lib/dialog";
-import chiefImg from "@/assets/character-chef.png";
-import { Activity } from "react";
 
 export function Home() {
 	const { setPage, dialogsRead } = useVillage();
@@ -23,7 +23,7 @@ export function Home() {
 						<button
 							type="button"
 							className="btn btn-primary"
-							onClick={() => setPage("snake")}
+							onClick={() => setPage("armory")}
 						>
 							Aller à la forge
 						</button>
