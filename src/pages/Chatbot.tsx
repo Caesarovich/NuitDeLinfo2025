@@ -1,7 +1,7 @@
-import { useCallback, useMemo, useState } from "react";
-import mad_john from "../assets/mad_john.png";
 import { useMutation } from "@tanstack/react-query";
+import { useCallback, useMemo, useState } from "react";
 import { useCharacter } from "@/contexts/village-context";
+import mad_john from "../assets/mad_john.png";
 
 type ChatMessage = {
 	text: string;

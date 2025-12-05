@@ -2,8 +2,8 @@ import { Activity } from "react";
 import { useVillage } from "@/contexts/village-context";
 import { Armory } from "./Armory";
 import { Chatbot } from "./Chatbot";
-import { Home } from "./Home";
 import CardGame from "./card-game/card_game";
+import { Home } from "./Home";
 
 export function Index() {
 	const { page, setPage } = useVillage();

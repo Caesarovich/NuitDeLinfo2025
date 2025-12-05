@@ -1,8 +1,4 @@
 import { useState } from "react";
-import CardDeck from "./card_deck";
-import type { CardType } from "./card_deck";
-
-import table from "../../assets/table.png";
 import apple from "../../assets/card/apple.png";
 import google_drive from "../../assets/card/google_drive.png";
 import google_map from "../../assets/card/google_map.png";
@@ -13,10 +9,13 @@ import nextcloud from "../../assets/card/nextcloud.png";
 import openstreatmap from "../../assets/card/openstretmap.png";
 import searx from "../../assets/card/searx.png";
 import windows from "../../assets/card/windows.png";
+import table from "../../assets/table.png";
+import type { CardType } from "./card_deck";
+import CardDeck from "./card_deck";
 
 function CardGame() {
 	const [z, setZ] = useState(2);
-	const [deckUser, setDeckUser] = useState<CardType[]>([
+	const [deckUser, _setDeckUser] = useState<CardType[]>([
 		{ image: apple, value: 1 },
 		{ image: google_search, value: 1 },
 		{ image: linux, value: 1 },
@@ -26,7 +25,7 @@ function CardGame() {
 		{ image: searx, value: 1 },
 	]);
 
-	const [deckEnemie, setDeckEnemie] = useState<CardType[]>([
+	const [deckEnemie, _setDeckEnemie] = useState<CardType[]>([
 		{ image: google_drive, value: 1 },
 		{ image: google_map, value: 1 },
 		{ image: google_search, value: 1 },

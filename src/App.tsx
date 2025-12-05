@@ -1,10 +1,10 @@
 import "./index.css";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import laserSound from "@/assets/laser.mp3";
 import Navbar from "./components/navbar";
 import { CharacterProvider } from "./contexts/village-context";
 import Index from "./pages/Index";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 export function App() {
 	const [laserMode, setLaserMode] = useState(false);

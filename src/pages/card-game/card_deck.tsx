@@ -1,4 +1,4 @@
-import { CardUser, CardEnemie } from "./card";
+import { CardEnemie, CardUser } from "./card";
 import "./card_game.css";
 
 export interface CardType {
@@ -15,9 +15,9 @@ interface Props {
 function CardDeck({ cards, face_sens, z, setZ }: Props) {
 	return (
 		<div
-			className={`card-deck${face_sens == "card-face-down" ? "-enemy" : ""}`}
+			className={`card-deck${face_sens === "card-face-down" ? "-enemy" : ""}`}
 		>
-			{face_sens == "card-face-up"
+			{face_sens === "card-face-up"
 				? cards.map((card: CardType, index: number) => (
 						<CardUser key={index} image={card.image} z={z} setZ={setZ} />
 					))
