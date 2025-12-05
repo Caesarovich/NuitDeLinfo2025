@@ -11,6 +11,7 @@ export function Index() {
 		<>
 			{page === "home" && <Home />}
 			{page === "armory" && <Armory />}
+			{page === "chatbot" && <Chatbot />}
 
 			<Activity mode={page === "home" ? "hidden" : "visible"}>
 				<button
@@ -21,21 +22,6 @@ export function Index() {
 					Retourner au bourg du vilage
 				</button>
 			</Activity>
-			<Activity mode={page === "snake" ? "visible" : "hidden"}>
-				<h1>Bienvenue au SNAKE</h1>
-			</Activity>
-
-			<Activity mode={page === "chatbot" ? "visible" : "hidden"}>
-				<Chatbot />
-			</Activity>
-
-			<button
-				type="button"
-				className="btn btn-link"
-				onClick={() => setPage("home")}
-			>
-				Retourner au bourg du vilage
-			</button>
 			<button
 				type="button"
 				onClick={() => setPage("chatbot")}

@@ -1,36 +1,69 @@
-import { useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import mad_john from "../assets/mad_john.png";
+import { useMutation } from "@tanstack/react-query";
+import { useCharacter } from "@/contexts/village-context";
+
+type ChatMessage = {
+	text: string;
+	self: boolean;
+};
+
+async function sendMessage(message: string): Promise<string> {
+	const res = await fetch("/api/chat", {
+		method: "POST",
+		headers: { "Content-Type": "application/json" },
+		body: JSON.stringify({ message }),
+	});
+	const data = await res.json();
+	return data.reply as unknown as string;
+}
 
 export function Chatbot() {
-	//const { setPage } = useVillage();
+	const characterContext = useCharacter();
 
-	async function sendMessage(message: string) {
-		const res = await fetch("/api/chat", {
-			method: "POST",
-			headers: { "Content-Type": "application/json" },
-			body: JSON.stringify({ message }),
-		});
-		const data = await res.json();
-		return data.reply;
-	}
-	const [count, setCount] = useState<number>(0);
-	const [john_answer, setJohnAnswer] = useState<string>(
-		"L’open source permet la liberté et la transparence, mais est-il vraiment sûr pour les entreprises si tout le code est accessible à tous ?",
+	const [messageHistory, setMessageHistory] = useState<ChatMessage[]>([
+		{
+			text: "L’open source permet la liberté et la transparence, mais est-il vraiment sûr pour les entreprises si tout le code est accessible à tous ?",
+			self: false,
+		},
+	]);
+
+	const [inputValue, setInputValue] = useState("");
+
+	const messageCount = useMemo(
+		() => messageHistory.filter((m) => m.self).length,
+		[messageHistory],
 	);
 
-	function handlesubmit(e: SubmitEvent) {
-		e.preventDefault();
-		const userText = e.target[0].value;
-		const message = userText + count.toString();
-		console.log(message);
-		const tmp = count + 1;
-		setCount(tmp);
-		sendMessage(message).then((reply) => {
-			setJohnAnswer(reply);
-		});
-	}
+	const addMessage = useCallback(
+		(text: string, self: boolean) =>
+			setMessageHistory(messageHistory.concat({ text, self })),
+		[messageHistory],
+	);
+
+	const { isPending, isError, mutate } = useMutation({
+		mutationFn: sendMessage,
+		onSuccess: (data) => {
+			addMessage(data, false);
+
+			if (messageCount > 4) {
+				addMessage(
+					"Bon c'est vrai tu as raison, tu as gagné. Tiens prends ta récompense et vas-t-en !",
+					false,
+				);
+				characterContext.addCompletedChallenge("chatbot");
+			}
+		},
+	});
+
+	const onSend = useCallback(() => {
+		mutate(inputValue);
+		addMessage(inputValue, true);
+		setInputValue("");
+	}, [addMessage, inputValue, mutate]);
+
 	return (
-		<div className="flex flex-col p-5">
+		<div className="flex flex-col p-5 mb-12">
 			<h1 className="text-3xl font-bold mb-4">Pourquoi avoir cliquer ici !</h1>
 
 			<p className="mb-8">
@@ -38,51 +71,67 @@ export function Chatbot() {
 				développeur de la Silicon Valley, accro aux GAFAM, il erre dans la rue,
 				perdu et obsédé par la Big Tech. Personne ne l’écoute… sauf toi.
 			</p>
-			<span className="font-semibold">
+			<span className="font-semibold mb-12">
 				Ta mission : réussir à lui faire changer d’avis et le guider sur le
 				droit chemin de l'<strong>open source</strong>, des alternatives libres
 				et indépendantes.
 			</span>
-			<img src={mad_john} alt="pnj" className="fixed left-0 w-150 " />
 
-			<div className="flex flex-col space-y-4 bg-red-50 rounded-xl p-4">
-				<div className="flex bg-sky-500/50 p-3 rounded-xl items-start space-x-2">
-					<span className="text-orange-600 font-semibold whitespace-nowrap">
-						John l’Arnaque :
-					</span>
-					<p className="text-blue-600 leading-relaxed">{john_answer}</p>
-				</div>
-
-				<form onSubmit={handlesubmit}>
-					<label className="flex flex-col bg-red-50 p-2 rounded-md">
-						<span className="font-semibold mb-1 text-gray-700">
-							Qu'allez-vous répondre pour le faire changer d'avis ? :
-						</span>
-						<textarea
-							name="myInput"
-							className="border border-gray-300 text-gray-700 rounded-md p-2 h-40 w-full resize-none"
-							placeholder="Tapez votre réponse ici..."
+			<div className="flex gap-16 h-[450px]">
+				<div className="gap-8 flex flex-col h-full">
+					<ul className="bg-base-200 rounded-lg p-8 gap-12 flex-1 overflow-hidden overflow-y-auto">
+						{messageHistory.map((m, idx) => (
+							// biome-ignore lint/suspicious/noArrayIndexKey: CHUT
+							<li key={idx}>
+								<ChatMessageBubble msg={m} />
+							</li>
+						))}
+					</ul>
+					<form
+						className="flex gap-2 w-full"
+						onSubmit={(e) => {
+							e.preventDefault();
+							if (isPending || isError || !inputValue.trim()) return;
+							onSend();
+						}}
+					>
+						<input
+							type="text"
+							className="input flex-1"
+							value={inputValue}
+							disabled={isPending || isError}
+							onChange={(e) => setInputValue(e.currentTarget.value)}
 						/>
-
 						<button
 							type="submit"
-							className="text-white bg-green-500 hover:bg-green-600  px-4 py-2.5 mt-2"
+							className="btn btn-primary"
+							disabled={isPending || isError}
 						>
-							Envoyez votre réponse
+							Send
 						</button>
-					</label>
-				</form>
+					</form>
+				</div>
+				<img src={mad_john} alt="pnj" className=" w-64" />
 			</div>
+		</div>
+	);
+}
 
-			{/* <div>
-				<button
-					type="button"
-					className="btn btn-primary"
-					onClick={() => setPage("snake")}
-				>
-					Aller à la forge
-				</button>
-			</div> */}
+type ChatMessageBubbleProps = {
+	msg: ChatMessage;
+};
+
+function ChatMessageBubble({ msg }: ChatMessageBubbleProps) {
+	if (msg.self)
+		return (
+			<div className="chat chat-start text-left">
+				<div className="chat-bubble chat-bubble-primary">{msg.text}</div>
+			</div>
+		);
+
+	return (
+		<div className="chat chat-end text-right">
+			<div className="chat-bubble chat-bubble-neutral">{msg.text}</div>
 		</div>
 	);
 }

@@ -10,7 +10,9 @@
 		"format": "bunx --bun  biome check --write --unsafe ."
 	},
 	"dependencies": {
+		"@tanstack/react-query": "^5.90.12",
 		"bun-plugin-tailwind": "^0.1.2",
+		"openai": "^6.10.0",
 		"react": "^19",
 		"react-dom": "^19",
 		"tailwindcss": "^4.1.11"

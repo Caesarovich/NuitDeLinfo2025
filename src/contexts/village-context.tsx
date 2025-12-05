@@ -7,7 +7,7 @@ import {
 	useState,
 } from "react";
 
-type VillagePages = "home" | "snake" | "armory";
+type VillagePages = "home" | "snake" | "armory" | "chatbot";
 
 export type VillageState = {
 	page: VillagePages;
@@ -21,7 +21,7 @@ export type VillageActions = {
 
 export type VillageContextType = VillageState & VillageActions;
 
-export type Challenges = "card" | "repair";
+export type Challenges = "card" | "repair" | "chatbot";
 
 export type CharacterState = {
 	name: string;

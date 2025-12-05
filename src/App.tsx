@@ -4,6 +4,7 @@ import laserSound from "@/assets/laser.mp3";
 import Navbar from "./components/navbar";
 import { CharacterProvider } from "./contexts/village-context";
 import Index from "./pages/Index";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 export function App() {
 	const [laserMode, setLaserMode] = useState(false);
@@ -57,15 +58,19 @@ export function App() {
 		};
 	}, [laserMode, laserScore]);
 
+	const queryClient = new QueryClient();
+
 	return (
-		<CharacterProvider>
-			<Navbar setLaserMode={setLaserMode} laserMode={laserMode} />
-			<div className="min-h-screen flex flex-col justify-center items-center">
-				<div className="max-w-7xl p-8 text-center relative z-10 bg-base-100 rounded-3xl">
-					<Index />
+		<QueryClientProvider client={queryClient}>
+			<CharacterProvider>
+				<Navbar setLaserMode={setLaserMode} laserMode={laserMode} />
+				<div className="min-h-screen flex flex-col justify-center items-center">
+					<div className="max-w-7xl p-8 text-center relative z-10 bg-base-100 rounded-3xl">
+						<Index />
+					</div>
 				</div>
-			</div>
-		</CharacterProvider>
+			</CharacterProvider>
+		</QueryClientProvider>
 	);
 }
 
