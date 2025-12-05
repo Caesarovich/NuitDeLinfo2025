@@ -16,6 +16,14 @@ declare module "*.png" {
 	export = path;
 }
 
+declare module "*.mp3" {
+	/**
+	 * A path to the SVG file
+	 */
+	const path: `${string}.mp3`;
+	export = path;
+}
+
 declare module "*.module.css" {
 	/**
 	 * A record of class names to their corresponding CSS module classes
