@@ -4,6 +4,7 @@ import { Armory } from "./Armory";
 import { Chatbot } from "./Chatbot";
 import CardGame from "./card-game/card_game";
 import { Home } from "./Home";
+import trolley from "@/assets/trolley.png";
 
 export function Index() {
 	const { page, setPage } = useVillage();
@@ -23,6 +24,14 @@ export function Index() {
 					Retourner au bourg du vilage
 				</button>
 			</Activity>
+			<button
+				type="button"
+				onClick={() => setPage("chatbot")}
+				className="fixed bottom-0 p-0 m-0 border-none bg-transparent"
+			>
+				<img src={trolley} alt="Retourner au bourg du village" />
+			</button>
+			<div className="app-chabot-background"></div>
 		</>
 	);
 }
