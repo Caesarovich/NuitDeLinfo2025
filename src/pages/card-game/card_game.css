@@ -1,0 +1,86 @@
+.card-game {
+	position: relative;
+	width: 100vw;
+	height: 100vh; /* fill full screen — change if needed */
+	overflow: hidden;
+}
+
+.card-game-background {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	object-fit: cover; /* makes image fill container */
+	z-index: -1; /* pushes image behind content */
+}
+
+.card-img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover; /* or contain / fill depending on preference */
+	border-radius: 12px; /* match the card shape */
+}
+
+.card-deck-enemy {
+	position: fixed; /* fixed at the bottom of the screen */
+	top: 40px; /* margin from bottom */
+	left: 50%; /* start centering horizontally */
+	min-height: 300px;
+	transform: translateX(-50%); /* perfect horizontal center */
+	display: flex;
+	justify-content: center; /* center cards in deck */
+	align-items: center;
+}
+
+.card-deck {
+	position: fixed; /* fixed at the bottom of the screen */
+	bottom: 15vh; /* margin from bottom */
+	left: 50%; /* start centering horizontally */
+	min-height: 300px;
+	transform: translateX(-50%); /* perfect horizontal center */
+	display: flex;
+	justify-content: center; /* center cards in deck */
+	align-items: center;
+}
+
+.card {
+	height: 15vh;
+	aspect-ratio: 3/4;
+	background-color: #fff;
+	border-radius: 12px;
+	box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-size: 24px;
+	cursor: pointer;
+
+	transform-style: preserve-3d;
+	transition:
+		transform 1s ease,
+		top 1s ease,
+		left 1s ease,
+		position 1s ease;
+	position: relative; /* start relative */
+}
+
+.card.user:hover {
+	transform: translateY(-10px) scale(1.05) rotateY(10deg); /* lift & slight tilt */
+	box-shadow: 0 20px 30px rgba(0, 0, 0, 0.5); /* stronger shadow */
+}
+
+/* When clicked, move to center and rotate */
+.card.user.active {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -42vh) rotateZ(-190deg);
+}
+
+.card.enemie.active {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, 25vh) rotateZ(370deg);
+}
