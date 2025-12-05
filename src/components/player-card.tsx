@@ -14,7 +14,7 @@ export default function PlayerCard() {
 	const { name, completedChallenges, challengeCount } = useCharacter();
 
 	const percent = useMemo(
-		() => cappedDivision(challengeCount, completedChallenges.size) * 100,
+		() => cappedDivision(completedChallenges.size, challengeCount) * 100,
 		[completedChallenges.size, challengeCount],
 	);
 

@@ -15,13 +15,15 @@ export function Index() {
 				<h1>Bienvenue au SNAKE</h1>
 			</Activity>
 
-			<button
-				type="button"
-				className="btn btn-link"
-				onClick={() => setPage("home")}
-			>
-				Retourner au bourg du vilage
-			</button>
+			<Activity mode={page === "home" ? "hidden" : "visible"}>
+				<button
+					type="button"
+					className="btn btn-link"
+					onClick={() => setPage("home")}
+				>
+					Retourner au bourg du vilage
+				</button>
+			</Activity>
 		</>
 	);
 }
